@@ -1,13 +1,9 @@
 # start-WoW
-My script that I used to start and configure my private CMangos WoW Server of Linux
-
-However, I don't play it anymore and don't even have WoW installed on my machine anymore. As such, this has not been run or tested for a year or so.
+My script that I used to start and configure my private CMangos WoW Server on Debian.
 
 ## Description
 
-My early childhood consisted of Ultima Online and World of Warcraft.
-When I was older I wanted to rediscover that childhood so I found CMaNGOS (https://cmangos.net/).
-I used this script to start and configure my private Burning Crusade CMaNGOS server.
+My early childhood consisted of Ultima Online and World of Warcraft. When I was older I wanted to rediscover that childhood so I found CMaNGOS (https://cmangos.net/). I used this script to start and configure my private CMaNGOS servers.
 
 Since I played the game solo but still wanted to experience end game content, I added a startup feature that optimized the settings in the server config file based on which gamemode I wanted to play on. There are seperate settings for:
 - solo play
@@ -16,20 +12,34 @@ Since I played the game solo but still wanted to experience end game content, I 
 - 20 - man instances
 - 40 - man instances
 
-You can use this if you want to but I really just have this here to prove to people that I can code (somewhat).
+### Setup
 
-### Installing
+This assumes you have mangos installed and configured. it also requires a `Wow.exe` client. I have only used this for the classic and tbc mangos servers but I am sure it works for the second expansion as well.
 
-A lot needs to be changed if this wants to run. Honestly, unless you want to fiddle with the program a bit, this is only meant to run on my machine. There are several reasons for this:
-  - there was a weird bug with mysqld package at the time so in order to start the realm server I had to temporaryily degrade a package with pacman and then reupgrade it. Because of this, the program requires sudo priveledges AND assumes you use and arch based distro. Honestly, I am sure this issue was fixed though so I bet that code could be removed.
+These env vars need to be set:
 
-  - I hardcoded the terminal that I used rather than use some sort of system variable for default terminal
+```
+    SERVER_BIN_PATH # path to mangos/run/bin with mangosd and realmd startup scripts 
+    WOW_EXE_PATH # path to directory where Wow.exe is found.
+```
 
-  - It is littered with hardcoded filepaths that are specific to my machine and how I installed wine, the CMangos servers, and WoW.
+### Usage
 
-  - I also never figured out how to gracefully shut down the servers. Oh well. I was able to play the game without problems at that point so I let it be.
+`python start_wow.py -h`
 
-In conclusion, I basically wrote this ASAP so I could play WoW.
+```
+usage: start_wow.py [-h] -m MODE
 
-### Who to Blame for this Mess?
-Jordan Porter
+Mode to set up server with.
+
+options:
+  -h, --help            show this help message and exit
+  -m MODE, --mode MODE  Specify the mode ('solo', '5-man', '10-man', '20-man', '40-man')
+```
+
+Once run, the script will wait 2 minutes before starting the WoW client in order to give your server time to boot. You may need to wait longer after the client starts, especially if you have the playerbot plugins installed. You can check in a separate terminal to ensure that both realm processes started.
+
+```
+ps aux | grep mangosd
+ps aux | grep realmd
+```
